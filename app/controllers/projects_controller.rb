@@ -4,7 +4,10 @@ class ProjectsController < ApplicationController
 
   # GET /projects
   def index
-    @projects = current_user.projects
+    @projects = case current_user.role
+                when 1 then Project.all
+                when 0 then current_user.projects
+    end
 
     render json: @projects
   end
