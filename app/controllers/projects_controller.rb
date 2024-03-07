@@ -1,9 +1,10 @@
 class ProjectsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_project, only: %i[ show update destroy ]
 
   # GET /projects
   def index
-    @projects = Project.all
+    @projects = current_user.projects
 
     render json: @projects
   end
@@ -15,7 +16,7 @@ class ProjectsController < ApplicationController
 
   # POST /projects
   def create
-    @project = Project.new(project_params)
+    @project = current_user.projects.build(project_params)
 
     if @project.save
       render json: @project, status: :created, location: @project
@@ -41,7 +42,7 @@ class ProjectsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_project
-      @project = Project.find(params[:id])
+      @project = current_user.projects.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
